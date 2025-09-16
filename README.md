@@ -4,6 +4,30 @@
 This project implements a **Universal Asynchronous Receiver Transmitter (UART)** system in Verilog HDL.  
 The design enables **serial communication** between an FPGA and external devices.  
 
+---
+
+## 📽️ Demonstration
+
+### ▶️ Video 1 – UART Transmission
+<video width="640" height="360" controls>
+  <source src="video/video1.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+[Watch Video 1 (file)](video/video1.mp4)
+
+---
+
+### ▶️ Video 2 – UART Reception
+<video width="640" height="360" controls>
+  <source src="video/video2.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+[Watch Video 2 (file)](video/video2.mp4)
+
+---
+
 ### ✨ Key Features
 - Configurable **baud rate generator**
 - **UART Receiver (RX)** with FSM-based data sampling
