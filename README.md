@@ -11,7 +11,7 @@ The design enables **serial communication** between an FPGA and external devices
 ## 📽️ Demonstration
 
 ### ▶️ Video 1 – UART Transmission
-[![Watch the Demo Video]](https://drive.google.com/file/d/1X9It11mGDRmDD6agX6G7K2zEI-bQLecw/view?usp=sharing)
+[![https://drive.google.com/file/d/1X9It11mGDRmDD6agX6G7K2zEI-bQLecw/view?usp=sharing]](https://drive.google.com/file/d/1X9It11mGDRmDD6agX6G7K2zEI-bQLecw/view?usp=sharing)
 
 
 ### ▶️ Video 2 – UART Reception
