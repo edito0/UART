@@ -15,7 +15,7 @@ The project is organized into modular RTL files to ensure reusability and clarit
 ---
 
 ## 📂 Data Tranfer on the UART
-![Data Tranfer on the UART](imgs/Picture1.png)
+![Data Tranfer on the UART](imgs/Picture2.png)
 
 
 1. Wait until incoming signal becomes 0 (start bit), then start the sampling tick counter
@@ -30,8 +30,21 @@ The project is organized into modular RTL files to ensure reusability and clarit
 
 ---
 
+### Architecture
+
+## 1. UART Tx FSM
+![UART Tx FSM](imgs/Picture6.png)
+
+## 2. UART Rx FSM
+![UART Rx FSM](imgs/Picture5.png)
+
+## 3. Complete Architecture
+![UART Architecrure](imgs/Picture7.png)
+
+---
+
 ## 📐 System Architecture
-The design consists of the following components (see block diagram above):
+The design consists of the following components:
 
 1. **Baud Rate Generator (Timer)**  
    - Generates sampling ticks (`s_tick`) for UART operation.  
@@ -81,10 +94,3 @@ The design consists of the following components (see block diagram above):
 3. Verify using a serial terminal (e.g., Putty, TeraTerm) via FPGA board UART port.  
 
 ---
-
-## 📷 Block Diagram
-The project block diagram illustrates the **UART data flow** with RX/TX FIFOs, transmitter, and receiver.  
-(Add the diagram image in your repo as `uart_block_diagram.png` and reference it here)
-
-```markdown
-![UART Block Diagram](uart_block_diagram.png)
