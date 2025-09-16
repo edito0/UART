@@ -1,90 +1,130 @@
 # UART Communication System (Verilog)
 
 ## 📌 Overview
-This project implements a **Universal Asynchronous Receiver Transmitter (UART)** system in Verilog.  
-The design supports **serial data communication** with the following key features:
-- Baud rate generation
-- UART receiver
-- UART transmitter
-- FIFO buffering for TX and RX paths
-- Button-controlled read/write operations
-- Debug outputs on LEDs and 7-segment displays
+This project implements a **Universal Asynchronous Receiver Transmitter (UART)** system in Verilog HDL.  
+The design enables **serial communication** between an FPGA and external devices.  
 
-The project is organized into modular RTL files to ensure reusability and clarity.
-
----
-
-## 📂 Data Tranfer on the UART
-![Data Tranfer on the UART](imgs/Picture2.png)
-
-
-1. Wait until incoming signal becomes 0 (start bit), then start the sampling tick counter
-
-2. When tick counter reaches 7 (middle of start bit), clear tick counter and restart
-
-3. When counter reaches 15 (middle of first data bit), shift bit value into register & restart tick counter
-
-4. Repeat step 3 (N – 1) more times to retrieve the remaining data bits
-
-5. Repeat step 3 (M) more times to obtain stop bits
-
-N data bits, M stop bits
+### ✨ Key Features
+- Configurable **baud rate generator**
+- **UART Receiver (RX)** with FSM-based data sampling
+- **UART Transmitter (TX)** with FSM-based serial data transmission
+- **FIFO buffers** for transmit and receive paths
+- **Button-controlled** read/write operations
+- **Debug outputs** via LEDs and 7-segment displays
+- Modular **RTL design** for clarity and reusability
 
 ---
 
+## 📂 Data Transfer in UART
+![Data Transfer on the UART](imgs/Picture2.png)
+
+UART communication follows an asynchronous serial protocol:
+
+1. Wait for the **start bit** (logic `0`).
+2. At the middle of the start bit (tick = 7), reset the counter.
+3. At the middle of each data bit (tick = 15), sample and shift into a register.
+4. Repeat step 3 for **N data bits**.
+5. Repeat step 3 for **M stop bits**.
+6. After stop bits, raise a **data ready flag**.
+
+**Parameters:**
+- **N** = number of data bits   
+- **M** = number of stop bits
+
+---
 
 ## 📐 System Architecture
-The design consists of the following components:
+The UART system is composed of the following RTL modules:
 
-![UART Architecrure](imgs/Picture7.png)
+![UART Architecture](imgs/Picture7.png)
 
-1. **Baud Rate Generator (Timer)**  
-   - Generates sampling ticks (`s_tick`) for UART operation.  
-   - Configured for **9600 baud** with `FINAL_VALUE = 650`.
+### 1. Baud Rate Generator (Timer)
+- Generates sampling ticks (`s_tick`) for RX/TX modules.
+- Configured for **9600 baud** (with `FINAL_VALUE = 650` for 50 MHz clock).
+- Provides precise timing for serial communication.
 
-2. **UART Receiver**  
-   - Receives serial data (`rx`).  
-   - Generates `rx_done_tick` when a byte is received.  
-   - Stores received data in **RX FIFO**.
-     ![UART Rx FSM](imgs/Picture5.png)
-
-3. **UART Transmitter**  
-   - Loads data from **TX FIFO**.  
-   - Transmits serial data (`tx`).  
-   - Signals transmission completion with `tx_done_tick`.
-     ![UART Tx FSM](imgs/Picture6.png)
-
-4. **FIFO Buffers**  
-   - RX FIFO stores incoming data until read.  
-   - TX FIFO buffers outgoing data before transmission.  
-   - Prevents data loss during continuous transfers.
-
-5. **Control & User Interface**  
-   - **Push buttons**: trigger read/write operations.  
-   - **LEDs**: indicate FIFO empty/full status.  
-   - **Switches + 7-segment display**: show transmitted/received data.  
+![Baud Rate Generator](imgs/Picture8.png)
 
 ---
 
-## 🚀 How It Works
-1. The **receiver** collects serial data from `rx` and pushes it into the **RX FIFO**.  
-2. The **user** can press a button to read data, which will be displayed on **7-segment displays**.  
-3. To transmit, the user loads data from switches into the **TX FIFO** using a button.  
-4. The **transmitter** pulls data from TX FIFO and sends it serially via `tx`.  
-5. LEDs provide FIFO status feedback.
+### 2. UART Receiver (RX)
+- Samples the **`rx`** line at each tick.  
+- Detects start, data, and stop bits using an FSM.  
+- Stores received data into **RX FIFO**.  
+- Signals **`rx_done_tick`** when a complete byte is received.
+
+![UART RX FSM](imgs/Picture5.png)
 
 ---
 
-## ⚙️ Parameters
-- **Baud Rate**: 9600  
-- **Data Width**: 8-bit  
-- **FIFO Depth**: Determined by Xilinx IP configuration  
+### 3. UART Transmitter (TX)
+- Fetches data from **TX FIFO**.  
+- Serializes the byte into start bit, data bits, and stop bits.  
+- Outputs the serial stream on **`tx`** line.  
+- Signals **`tx_done_tick`** on transmission completion.
+
+![UART TX FSM](imgs/Picture6.png)
+
+---
+
+### 4. FIFO Buffers
+- **RX FIFO**: Stores incoming data until read by the user.  
+- **TX FIFO**: Holds data waiting to be transmitted.  
+- Prevents data loss during back-to-back transfers.  
+- FIFO depth is configurable via Xilinx IP (default: 16 entries).  
+
+---
+
+### 5. Control & User Interface
+- **Push Buttons**:  
+  - `wr_uart` → Write data from switches into TX FIFO.  
+  - `rd_uart` → Read data from RX FIFO.  
+- **Switches (SW0–SW7)**: Provide 8-bit parallel input for TX.  
+- **LEDs**: Indicate FIFO **empty/full** states.  
+- **7-Segment Display**: Displays transmitted/received data in hexadecimal.  
+
+---
+
+## 🚀 How the System Works
+1. **Reception**  
+   - Incoming serial data enters RX → stored in RX FIFO.  
+   - On button press (`rd_uart`), data is read and displayed on 7-seg.  
+
+2. **Transmission**  
+   - User sets data on switches (SW0–SW7).  
+   - On button press (`wr_uart`), data is written into TX FIFO.  
+   - TX module serializes data and sends via `tx`.  
+
+3. **Status Monitoring**  
+   - LEDs indicate FIFO status (empty/full).  
+   - Debugging via FPGA onboard peripherals.  
+
+---
+
+## ⚙️ System Parameters
+| Parameter         | Value            | Notes                                |
+|-------------------|------------------|--------------------------------------|
+| Baud Rate         | 9600             | Configurable via `FINAL_VALUE`       |
+| Data Width        | 8 bits           | Fixed for this design                |
+| Stop Bits         | 1 (default)      | Can be extended                      |
+| FIFO Depth        | 16 (default)     | From Xilinx FIFO IP                  |
+| Clock Frequency   | 50 MHz           | Input clock for baud generator       |
 
 ---
 
 ## 🛠️ Simulation & Testing
-1. Simulate each RTL module independently (UART RX, UART TX, FIFO).  
-2. Run integration test with `terminal_demo.v` as top-level.  
-3. Verify using a serial terminal (e.g., Putty, TeraTerm) via FPGA board UART port.  
+1. **Unit Test** each RTL module:  
+   - `baud_gen.v`  
+   - `uart_rx.v`  
+   - `uart_tx.v`  
+   - `fifo.v`  
+
+2. **Integration Test** with top-level:  
+   - `terminal_demo.v` (connects RX, TX, FIFOs, and user I/O).  
+
+3. **Hardware Verification**  
+   - Program FPGA with the design.  
+   - Use **serial terminal software** (Putty) on PC.  
+   - Confirm loopback or direct RX/TX functionality.  
 
 ---
