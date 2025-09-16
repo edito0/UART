@@ -8,23 +8,14 @@ The design enables **serial communication** between an FPGA and external devices
 
 ## 📽️ Demonstration
 
+## 📽️ Demonstration
+
 ### ▶️ Video 1 – UART Transmission
-<video width="640" height="360" controls>
-  <source src="video/video1.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
-[Watch Video 1 (file)](video/video1.mp4)
-
----
+[🎬 Watch Video 1](video/video1.mp4)
 
 ### ▶️ Video 2 – UART Reception
-<video width="640" height="360" controls>
-  <source src="video/video2.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+[🎬 Watch Video 2](video/video2.mp4)
 
-[Watch Video 2 (file)](video/video2.mp4)
 
 ---
 
