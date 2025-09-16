@@ -28,23 +28,15 @@ The project is organized into modular RTL files to ensure reusability and clarit
 
 5. Repeat step 3 (M) more times to obtain stop bits
 
----
-
-### Architecture
-
-## 1. UART Tx FSM
-![UART Tx FSM](imgs/Picture6.png)
-
-## 2. UART Rx FSM
-![UART Rx FSM](imgs/Picture5.png)
-
-## 3. Complete Architecture
-![UART Architecrure](imgs/Picture7.png)
+N data bits, M stop bits
 
 ---
+
 
 ## 📐 System Architecture
 The design consists of the following components:
+
+![UART Architecrure](imgs/Picture7.png)
 
 1. **Baud Rate Generator (Timer)**  
    - Generates sampling ticks (`s_tick`) for UART operation.  
@@ -54,11 +46,13 @@ The design consists of the following components:
    - Receives serial data (`rx`).  
    - Generates `rx_done_tick` when a byte is received.  
    - Stores received data in **RX FIFO**.
+     ![UART Rx FSM](imgs/Picture5.png)
 
 3. **UART Transmitter**  
    - Loads data from **TX FIFO**.  
    - Transmits serial data (`tx`).  
    - Signals transmission completion with `tx_done_tick`.
+     ![UART Tx FSM](imgs/Picture6.png)
 
 4. **FIFO Buffers**  
    - RX FIFO stores incoming data until read.  
